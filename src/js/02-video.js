@@ -39,24 +39,6 @@ player
         break;
     }
   });
-// //on(event: string, callback: function)
-// Add an event listener for the specified event. Will call the callback with a single parameter,
-// data, that contains the data for that event.See events below for details.
-
-// const onPlay = function (data) {
-// data is an object containing properties specific to that event
-// };
-
-// player.on('play', onPlay);
-
-// timeupdate
-// Triggered as the currentTime of the video updates. It generally fires every 250ms, but it may vary depending on the browser.
-
-// {
-//     duration: 61.857
-//     percent: 0.049
-//     seconds: 3.034
-// }
 
 // player
 //   .setCurrentTime(30.456)
