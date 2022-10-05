@@ -1,42 +1,44 @@
 import Player from '@vimeo/player';
+import throttle from 'lodash.throttle';
 
 const iframe = document.querySelector('iframe');
+// console.dir(iframe);
+
 const player = new Player(iframe);
+// console.dir(player);
 
-player.on('timeupdate', event => {
-  console.log(event.seconds);
-  localStorage.setItem(
-    'videoplayer-current-time',
-    JSON.stringify(event.seconds)
-  );
+player.on(
+  'timeupdate',
+  throttle(event => {
+    // console.log(event);
+    // console.log(event.seconds);
+    localStorage.setItem(
+      'videoplayer-current-time',
+      JSON.stringify(event.seconds)
+    );
+  }, 1000)
+);
 
-  let forTime = +localStorage.getItem('videoplayer-current-time');
-  console.log(forTime);
+const forTime = +localStorage.getItem('videoplayer-current-time');
+// console.log(forTime);
 
-  console.dir(player.setCurrentTime(forTime));
+player
+  .setCurrentTime(forTime)
+  .then(function (seconds) {
+    console.log('player');
+    // seconds = the actual time that the player seeked to
+  })
+  .catch(function (error) {
+    switch (error.name) {
+      case 'RangeError':
+        // the time was less than 0 or greater than the video’s duration
+        break;
 
-  // player
-  //   .setCurrentTime(forTime)
-  //   .then(function (seconds) {
-  //     console.log('player');
-  //     // seconds = the actual time that the player seeked to
-  //   })
-  //   .catch(function (error) {
-  //     switch (error.name) {
-  //       case 'RangeError':
-  //         // the time was less than 0 or greater than the video’s duration
-  //         break;
-
-  //       default:
-  //         // some other error occurred
-  //         break;
-  //     }
-  //   });
-});
-
-console.dir(player);
-console.dir(iframe);
-
+      default:
+        // some other error occurred
+        break;
+    }
+  });
 // //on(event: string, callback: function)
 // Add an event listener for the specified event. Will call the callback with a single parameter,
 // data, that contains the data for that event.See events below for details.
