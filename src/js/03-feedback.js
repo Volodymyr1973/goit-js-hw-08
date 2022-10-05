@@ -1,44 +1,59 @@
+import throttle from 'lodash.throttle';
+
 const inputEl = document.querySelector('.feedback-form input');
-console.log(inputEl.value);
+// console.log(inputEl.value);
 
 const textareaEl = document.querySelector('.feedback-form textarea');
-console.dir(textareaEl);
-
-const btnEl = document.querySelector(`.feedback-form button`);
-console.log(btnEl);
+// console.dir(textareaEl);
 
 const formEl = document.querySelector('.feedback-form');
-console.dir(formEl);
+// console.dir(formEl);
+let obj = { email: ' ', message: ' ' };
 
-let emailIn;
-
-let textIn;
-
-let obj = {};
+inputEmail();
+inputTextarea();
 
 const onInput = event => {
   event.preventDefault();
-  console.log(event);
-  console.log(event.path[0].type);
+  let emailIn;
+  let textIn;
+
   if (event.path[0].type === 'email') {
     emailIn = event.target.value;
     obj.email = emailIn;
 
-    console.log(emailIn);
-  } else if (event.path[0].type === 'textarea') {
+    // console.log(emailIn);
+  }
+  if (event.path[0].type === 'textarea') {
     textIn = event.target.value;
     obj.message = textIn;
 
-    console.log(textIn);
+    //  console.log(textIn);
   }
 
-  console.log(obj);
   localStorage.setItem('feedback-form-state', JSON.stringify(obj));
-
-  console.log(localStorage.getItem('feedback-form-state'));
+  // console.log(JSON.parse(localStorage.getItem('feedback-form-state')).email);
+  // console.log(JSON.parse(localStorage.getItem('feedback-form-state')).message);
+  // console.log(localStorage.getItem('feedback-form-state'));
 };
 
-formEl.addEventListener('input', onInput);
+formEl.addEventListener('input', throttle(onInput, 500));
+
+function inputEmail() {
+  if (localStorage.getItem('feedback-form-state')) {
+    inputEl.value = JSON.parse(
+      localStorage.getItem('feedback-form-state')
+    ).email;
+  }
+}
+
+function inputTextarea() {
+  if (localStorage.getItem('feedback-form-state')) {
+    textareaEl.value = JSON.parse(
+      localStorage.getItem('feedback-form-state')
+    ).message;
+  }
+}
 
 const onSubmit = event => {
   event.preventDefault();
